@@ -6,4 +6,6 @@ import java.io.IOException;
 
 public interface IWebPageLoader {
     Document getWebPage(String url) throws IOException;
+
+    String getRedirectUrl(String link) throws IOException;
 }
