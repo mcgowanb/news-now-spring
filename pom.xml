@@ -16,6 +16,7 @@
         <java.version>1.8</java.version>
         <jsoup.version>1.11.3</jsoup.version>
         <twitter4j-core.version>4.0.6</twitter4j-core.version>
+        <javax.inject.version>1</javax.inject.version>
     </properties>
 
     <parent>
@@ -53,6 +54,11 @@
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
             <version>${twitter4j-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
         </dependency>
 
 
