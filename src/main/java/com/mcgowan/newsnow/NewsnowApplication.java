@@ -4,6 +4,7 @@ import com.mcgowan.newsnow.service.INewsNow;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import twitter4j.TwitterException;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class NewsnowApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws IOException {
+    public void run(String... args) throws IOException, TwitterException {
         newsNow.process();
     }
 }

@@ -24,4 +24,5 @@
 /nbdist/
 /.nb-gradle/
 
-twitter.properties
+twitter4j.properties
+logs/*
