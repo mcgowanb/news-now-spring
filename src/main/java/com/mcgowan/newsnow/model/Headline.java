@@ -18,9 +18,17 @@ public class Headline {
 
     private Date created;
 
+    private final Integer TWEET_LENGTH = 260;
+
     @Override
     public String toString() {
-        return String.format("%s %s", headline, followOnLink);
+        String result = String.format("%s %s", headline, followOnLink);
+        if (result.length() > TWEET_LENGTH) {
+            Integer diff = result.length() - TWEET_LENGTH + 4;
+            String hlText = headline.substring(0, headline.length() - diff) + "... ";
+            result = String.format("%s %s", hlText, followOnLink);
+        }
+        return result;
     }
 
     @Override
