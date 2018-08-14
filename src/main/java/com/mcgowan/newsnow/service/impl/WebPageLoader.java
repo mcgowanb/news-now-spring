@@ -12,6 +12,10 @@ import java.io.IOException;
 @Log4j2
 public class WebPageLoader implements IWebPageLoader {
 
+    private final String HREF = "href";
+
+    private final String CSS_SELECTOR = "#retrieval-msg > p a";
+
     @Override
     public Document getWebPage(final String url) throws IOException {
         log.info("connecting to {}", url);
@@ -21,8 +25,8 @@ public class WebPageLoader implements IWebPageLoader {
     @Override
     public String getRedirectUrl(String link) throws IOException {
         return getWebPage(link)
-                .select("#retrieval-msg > p a")
-                .attr("href");
+                .select(CSS_SELECTOR)
+                .attr(HREF);
     }
 
 }

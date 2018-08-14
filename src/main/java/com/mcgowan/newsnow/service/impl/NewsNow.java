@@ -6,6 +6,7 @@ import com.mcgowan.newsnow.service.IWebPageLoader;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.ResponseList;
 import twitter4j.Status;
@@ -28,7 +29,11 @@ public class NewsNow implements INewsNow {
 
     private ResponseList<Status> currentTweets;
 
-    private static final String SELECTOR = "div.newsmain_wrap.central_ln_wrap.h-spacing--top .hl";
+    @Value("${headline.selector}")
+    private String selector;
+
+    @Value("${application.url}")
+    private String uri;
 
     @Inject
     public NewsNow(IWebPageLoader webPageLoader, Twitter twitter) {
@@ -39,9 +44,8 @@ public class NewsNow implements INewsNow {
     @Override
     public void process() throws IOException, TwitterException {
         currentTweets = twitter.getLatestTweets();
-        String url = "http://www.newsnow.co.uk/h/World+News/Europe/Western/Republic+of+Ireland";
-        Document doc = webPageLoader.getWebPage(url);
-        ArrayList<Headline> headlinesToTweet = doc.select(SELECTOR)
+        Document doc = webPageLoader.getWebPage(uri);
+        ArrayList<Headline> headlinesToTweet = doc.select(selector)
                 .stream()
                 .map(this::createHeadline)
                 .filter(this::isDuplicateTweet)
@@ -54,7 +58,7 @@ public class NewsNow implements INewsNow {
             log.info("No unique headlines to tweet. NFA");
     }
 
-    public boolean isDuplicateTweet(Headline e) {
+    private boolean isDuplicateTweet(Headline e) {
         Integer cLength = e.getHeadline().length() >= 60 ? 60 : e.getHeadline().length();
         String title = e.getHeadline().substring(0, cLength).trim();
         List<Status> matches = currentTweets.stream()
