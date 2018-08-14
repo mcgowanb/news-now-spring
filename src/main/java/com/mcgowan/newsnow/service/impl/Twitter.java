@@ -52,4 +52,20 @@ public class Twitter implements ITwitter {
         return twitter.getUserTimeline(p);
     }
 
+    public void clearAllTweets(){
+        try {
+            getLatestTweets().forEach(t -> {
+                log.info("attempting to delete tweet");
+                try {
+                    twitter.destroyStatus(t.getId());
+                    log.info("successfully deleted tweet");
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

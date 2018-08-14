@@ -35,6 +35,9 @@ public class NewsNow implements INewsNow {
     @Value("${application.url}")
     private String uri;
 
+    @Value("${tweet.hashtag}")
+    private String hashTag;
+
     @Inject
     public NewsNow(IWebPageLoader webPageLoader, Twitter twitter) {
         this.webPageLoader = webPageLoader;
@@ -71,6 +74,7 @@ public class NewsNow implements INewsNow {
     private Headline createHeadline(Element element) {
         return Headline.builder()
                 .headline(element.getElementsByClass("hll").first().text())
+                .hashTag(hashTag)
                 .link(element.getElementsByClass("hll").first().attr("href"))
                 .created(new Date(Long.parseLong(element.getElementsByClass("time")
                         .first().attr("data-time")) * 1000))

@@ -20,13 +20,15 @@ public class Headline {
 
     private final Integer TWEET_LENGTH = 260;
 
+    private String hashTag;
+
     @Override
     public String toString() {
-        String result = String.format("%s %s", headline, followOnLink);
+        String result = String.format("%s %s %s", headline, hashTag, followOnLink);
         if (result.length() > TWEET_LENGTH) {
-            Integer diff = result.length() - TWEET_LENGTH + 4;
+            Integer diff = (result.length() + hashTag.length() + 1) - (TWEET_LENGTH + 4);
             String hlText = headline.substring(0, headline.length() - diff) + "... ";
-            result = String.format("%s %s", hlText, followOnLink);
+            result = String.format("%s %s %s", hlText, hashTag, followOnLink);
         }
         return result;
     }
