@@ -24,7 +24,7 @@ public class Twitter implements ITwitter {
     @Override
     public void publish(Headline headline) throws TwitterException {
         Status result = twitter.updateStatus(headline.toString());
-        log.info("{} successfully published", result.getText());
+        log.info("Successfully published [{}]", result.getText());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Twitter implements ITwitter {
             try {
                 publish(h);
             } catch (TwitterException ex) {
-                log.error("Tweet {} is a duplicate", h.getHeadline());
+                log.error("Duplicate tweet [{}]", h.getHeadline());
             }
         }
     }

@@ -13,7 +13,7 @@ import twitter4j.TwitterException;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +28,6 @@ public class NewsNow implements INewsNow {
 
     private ResponseList<Status> currentTweets;
 
-    private String url;
-
     private static final String SELECTOR = "div.newsmain_wrap.central_ln_wrap.h-spacing--top .hl";
 
     @Inject
@@ -41,17 +39,13 @@ public class NewsNow implements INewsNow {
     @Override
     public void process() throws IOException, TwitterException {
         currentTweets = twitter.getLatestTweets();
-
-        url = "http://www.newsnow.co.uk/h/World+News/Europe/Western/Republic+of+Ireland";
+        String url = "http://www.newsnow.co.uk/h/World+News/Europe/Western/Republic+of+Ireland";
         Document doc = webPageLoader.getWebPage(url);
-        List<Element> links = doc.select(SELECTOR);
-
-        List<Headline> headlinesToTweet = links.stream()
+        ArrayList<Headline> headlinesToTweet = doc.select(SELECTOR)
+                .stream()
                 .map(this::createHeadline)
-                .sorted(Comparator.comparing(Headline::getCreated).reversed())
                 .filter(this::isDuplicateTweet)
-                .limit(20)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
 
         if (!headlinesToTweet.isEmpty()) {
             headlinesToTweet.forEach(this::addFollowOnLink);
@@ -61,11 +55,11 @@ public class NewsNow implements INewsNow {
     }
 
     public boolean isDuplicateTweet(Headline e) {
-        String title = e.getHeadline().trim();
-        List<Status> matches = currentTweets.stream().filter(ct -> {
-            String existingTitle = ct.getText().split("https:")[0].trim();
-            return existingTitle.equals(title);
-        }).collect(Collectors.toList());
+        Integer cLength = e.getHeadline().length() >= 60 ? 60 : e.getHeadline().length();
+        String title = e.getHeadline().substring(0, cLength).trim();
+        List<Status> matches = currentTweets.stream()
+                .filter(ct -> ct.getText().contains(title))
+                .collect(Collectors.toCollection(ArrayList::new));
         return matches.isEmpty();
     }
 
